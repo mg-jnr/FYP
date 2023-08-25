@@ -22,38 +22,143 @@ class _MainPageViewState extends ConsumerState<MainPageView> {
     const ProfileView(),
   ];
   int currentPageIndex = 0;
+  final ValueNotifier<int> selectedTab = ValueNotifier(0);
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
-      drawer: NavigationDrawer(
-        onDestinationSelected: (index) {
-          setState(() {
-            currentPageIndex = index;
-          });
-        },
-        selectedIndex: currentPageIndex,
-        tilePadding: const EdgeInsets.symmetric(horizontal: 24),
-        children: const [
-          NavigationDrawerDestination(
-            icon: Icon(IconlyLight.activity),
-            label: Text('Dashboard'),
+      drawer: Drawer(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 28.0),
+          child: SafeArea(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const CircleAvatar(radius: 28),
+                    const SizedBox(width: 12),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Todd Nelson', style: theme.textTheme.titleMedium),
+                        Text('tello_nii@outlook.com', style: theme.textTheme.bodySmall),
+                        TextButton(
+                          style: TextButton.styleFrom(
+                            padding: EdgeInsets.zero,
+                            visualDensity: const VisualDensity(
+                              vertical: -4,
+                            ),
+                            textStyle: theme.textTheme.bodySmall,
+                          ),
+                          onPressed: () {},
+                          child: const Text('View profile'),
+                        )
+                      ],
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 24),
+                DrawerTabButton(
+                  labelText: 'Dashboard',
+                  tabValue: 0,
+                  icon: IconlyLight.activity,
+                  selectedTabValue: currentPageIndex,
+                  selectedTab: selectedTab,
+                ),
+                DrawerTabButton(
+                  labelText: 'Facilities',
+                  tabValue: 1,
+                  icon: Iconsax.buildings,
+                  selectedTabValue: currentPageIndex,
+                  selectedTab: selectedTab,
+                ),
+                DrawerTabButton(
+                  labelText: 'Fault reports',
+                  tabValue: 2,
+                  icon: Iconsax.pen_tool,
+                  selectedTabValue: currentPageIndex,
+                  selectedTab: selectedTab,
+                ),
+                DrawerTabButton(
+                  labelText: 'Profile',
+                  tabValue: 3,
+                  icon: IconlyLight.profile,
+                  selectedTabValue: currentPageIndex,
+                  selectedTab: selectedTab,
+                ),
+                const Spacer(),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: TextButton.icon(
+                    style: TextButton.styleFrom(
+                      foregroundColor: theme.colorScheme.error,
+                    ),
+                    onPressed: () {},
+                    icon: const Icon(Iconsax.logout),
+                    label: const Text('Logout'),
+                  ),
+                )
+              ],
+            ),
           ),
-          NavigationDrawerDestination(
-            icon: Icon(Iconsax.buildings),
-            label: Text('Facilities'),
-          ),
-          NavigationDrawerDestination(
-            icon: Icon(Iconsax.pen_tool),
-            label: Text('Fault reports'),
-          ),
-          NavigationDrawerDestination(
-            icon: Icon(IconlyLight.profile),
-            label: Text('Profile'),
-          ),
-        ],
+        ),
       ),
-      body: IndexedStack(index: currentPageIndex, children: pages),
+      appBar: AppBar(),
+      body: ValueListenableBuilder(
+          valueListenable: selectedTab,
+          builder: (context, index, _) {
+            return IndexedStack(index: index, children: pages);
+          }),
+    );
+  }
+}
+
+class DrawerTabButton extends StatelessWidget {
+  const DrawerTabButton({
+    required this.labelText,
+    required this.icon,
+    required this.tabValue,
+    required this.selectedTabValue,
+    required this.selectedTab,
+    super.key,
+  });
+  final String labelText;
+  final IconData icon;
+  final int tabValue;
+  final int selectedTabValue;
+  final ValueNotifier<int> selectedTab;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return TextButton.icon(
+      style: TextButton.styleFrom(
+        backgroundColor: selectedTab.value == tabValue ? theme.primaryColor.withOpacity(0.5) : null,
+        alignment: Alignment.centerLeft,
+        padding: const EdgeInsets.all(12),
+      ),
+      onPressed: () {
+        selectedTab.value = tabValue;
+
+        Scaffold.of(context).closeDrawer();
+      },
+      icon: Padding(
+        padding: const EdgeInsets.only(right: 8.0),
+        child: Icon(
+          icon,
+          color: selectedTab.value == tabValue ? theme.primaryColor : const Color(0xFF575757),
+        ),
+      ),
+      label: Text(
+        labelText,
+        style: theme.textTheme.bodyMedium?.copyWith(
+          fontSize: 14,
+          color: selectedTab.value == tabValue ? theme.colorScheme.onPrimary : null,
+        ),
+      ),
     );
   }
 }
