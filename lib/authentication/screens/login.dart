@@ -29,6 +29,9 @@ class _LoginViewState extends ConsumerState<LoginView> with InputValidationMixin
       } else {
         LoadingScreen.instance().hide();
       }
+      if (state is AuthenticationSuccess) {
+        Navigator.of(context).pop();
+      }
       if (state is AuthenticationFailure) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
