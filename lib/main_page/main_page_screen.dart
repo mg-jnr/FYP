@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:iconly/iconly.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:property_management/dashboard/dashboard.dart';
-import 'package:property_management/facilities/screens/facilities.dart';
-import 'package:property_management/faults/faults.dart';
-import 'package:property_management/profile/profile.dart';
+
+import '../authentication/authentication.dart';
+import '../dashboard/dashboard.dart';
+import '../facilities/facilities.dart';
+import '../faults/faults.dart';
+import '../loading_screen/loading_screen.dart';
+import '../profile/profile.dart';
 
 class MainPageView extends ConsumerStatefulWidget {
   const MainPageView({super.key});
@@ -27,6 +30,16 @@ class _MainPageViewState extends ConsumerState<MainPageView> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    ref.listen(
+      authenticationStateProvider,
+      (previous, state) {
+        if (state is AuthenticationLoading) {
+          LoadingScreen.instance().show(context: context, text: 'Signing out of account...');
+        } else {
+          LoadingScreen.instance().hide();
+        }
+      },
+    );
     return Scaffold(
       drawer: Drawer(
         child: Padding(
@@ -82,13 +95,13 @@ class _MainPageViewState extends ConsumerState<MainPageView> {
                   selectedTabValue: currentPageIndex,
                   selectedTab: selectedTab,
                 ),
-                DrawerTabButton(
-                  labelText: 'Profile',
-                  tabValue: 3,
-                  icon: IconlyLight.profile,
-                  selectedTabValue: currentPageIndex,
-                  selectedTab: selectedTab,
-                ),
+                // DrawerTabButton(
+                //   labelText: 'Profile',
+                //   tabValue: 3,
+                //   icon: IconlyLight.profile,
+                //   selectedTabValue: currentPageIndex,
+                //   selectedTab: selectedTab,
+                // ),
                 const Spacer(),
                 Align(
                   alignment: Alignment.centerLeft,
@@ -96,7 +109,10 @@ class _MainPageViewState extends ConsumerState<MainPageView> {
                     style: TextButton.styleFrom(
                       foregroundColor: theme.colorScheme.error,
                     ),
-                    onPressed: () {},
+                    onPressed: () async {
+                      await ref.read(authenticationStateProvider.notifier).signOut();
+                      print('Printing something');
+                    },
                     icon: const Icon(Iconsax.logout),
                     label: const Text('Logout'),
                   ),
@@ -106,7 +122,6 @@ class _MainPageViewState extends ConsumerState<MainPageView> {
           ),
         ),
       ),
-      appBar: AppBar(),
       body: ValueListenableBuilder(
           valueListenable: selectedTab,
           builder: (context, index, _) {
