@@ -20,7 +20,7 @@ class _PropertyDetailsViewState extends ConsumerState<PropertyDetailsView> {
     final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Fault details'),
+        title: const Text('Properties details'),
       ),
       body: ListView(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
