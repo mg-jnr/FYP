@@ -9,6 +9,8 @@ class AddPropertyView extends ConsumerStatefulWidget {
 
 class _AddPropertyViewState extends ConsumerState<AddPropertyView> {
   final TextEditingController type = TextEditingController();
+  final TextEditingController description = TextEditingController();
+  final TextEditingController rentAmount = TextEditingController();
   final TextEditingController address = TextEditingController();
   final TextEditingController rooms = TextEditingController();
   final ValueNotifier<List<String>> services = ValueNotifier([]);
@@ -45,6 +47,16 @@ class _AddPropertyViewState extends ConsumerState<AddPropertyView> {
                   decoration: const InputDecoration(
                     labelText: 'Property type',
                     hintText: 'Office space',
+                  ),
+                ),
+                const SizedBox(height: 16),
+                TextFormField(
+                  controller: description,
+                  maxLines: 3,
+                  minLines: 1,
+                  decoration: const InputDecoration(
+                    labelText: 'Description',
+                    hintText: 'Write a brief about your property...',
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -153,7 +165,17 @@ class _AddPropertyViewState extends ConsumerState<AddPropertyView> {
                 Text(
                   'Take a picture or video of the incident',
                   style: theme.textTheme.bodySmall,
-                )
+                ),
+                const SizedBox(height: 16),
+                TextFormField(
+                  controller: rentAmount,
+                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                  decoration: const InputDecoration(
+                    labelText: 'Monthly rent',
+                    hintText: 'Eg. GH¢ 4000',
+                    prefixText: 'GH¢  ',
+                  ),
+                ),
               ],
             ),
           ),

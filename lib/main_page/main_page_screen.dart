@@ -66,7 +66,13 @@ class _MainPageViewState extends ConsumerState<MainPageView> {
                             ),
                             textStyle: theme.textTheme.bodySmall,
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (_) => const ProfileView(),
+                              ),
+                            );
+                          },
                           child: const Text('View profile'),
                         )
                       ],

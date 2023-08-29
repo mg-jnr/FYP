@@ -35,7 +35,7 @@ class _FacilitiesViewState extends ConsumerState<FacilitiesView> with SingleTick
             controller: tabController,
             tabs: const [
               Text('Occupied'),
-              Text('Unoccupied'),
+              Text('Empty'),
             ],
             indicatorSize: TabBarIndicatorSize.tab,
             labelPadding: const EdgeInsets.symmetric(vertical: 12),
